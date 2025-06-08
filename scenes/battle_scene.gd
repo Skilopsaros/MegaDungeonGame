@@ -42,17 +42,27 @@ func next_room() -> void:
 	start_battle()
 
 func go_to_room(room_data: RoomData) -> void:
-	print("IN GO TO ROOM")
+	print()
+	print("IN GO TO ROOM BEFORE")
+	for entity in room_data.entities:
+		print(entity)
+		print(entity.cell)
+	print()
 	await clear_room()
+	print("IN GO TO ROOM After")
+	for entity in room_data.entities:
+		print(entity)
+		print(entity.cell)
+	print()
 	game_board = room_scene.instantiate()
 	game_board.character_died.connect(_on_character_died)
 	game_board.data = room_data
 	add_child(game_board)
 	move_child(game_board, 0)
 	current_time = 0
+	game_board.reinitialize()
 
 func clear_room() -> void:
-	print("in clear room")
 	rooms_data[current_room] = game_board.export_data()
 	game_board.queue_free()
 	_hud.clear_all_character_action_timelines()

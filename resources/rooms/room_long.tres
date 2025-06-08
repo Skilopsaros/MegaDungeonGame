@@ -1,10 +1,54 @@
-[gd_resource type="Resource" script_class="RoomData" load_steps=3 format=3 uid="uid://b7ugggpvw4sti"]
+[gd_resource type="Resource" script_class="RoomData" load_steps=15 format=3 uid="uid://b7ugggpvw4sti"]
 
 [ext_resource type="Script" uid="uid://3u3rlahuoloc" path="res://resources/entity.gd" id="1_81bsx"]
 [ext_resource type="Script" uid="uid://buo1t2mlivsrc" path="res://resources/data/room_data.gd" id="2_4oua7"]
+[ext_resource type="Script" uid="uid://bgl4ax45c5jck" path="res://scenes/common/action.gd" id="2_ypu52"]
+[ext_resource type="Resource" uid="uid://dodkgchtfqapk" path="res://resources/square_grid.tres" id="3_sym5y"]
+[ext_resource type="Script" uid="uid://uykl8mj3e3uk" path="res://scenes/actions/move.gd" id="4_3m7hu"]
+[ext_resource type="Script" uid="uid://dxb606kk68iqq" path="res://scenes/actions/move_attack.gd" id="5_82btw"]
+[ext_resource type="Script" uid="uid://djid8svotxnqa" path="res://scenes/actions/attack.gd" id="6_j7dlx"]
+[ext_resource type="PackedScene" uid="uid://cr1t5wgrybocf" path="res://scenes/NPC_AI/basic_ai.tscn" id="7_e17s5"]
+[ext_resource type="Script" uid="uid://cl8bjga2x7tq3" path="res://resources/data/character_data.gd" id="8_tpumh"]
+[ext_resource type="Texture2D" uid="uid://bcem8bm3kt5pu" path="res://assets/images/character_spritesheets/red_character.png" id="9_ucmkc"]
+
+[sub_resource type="Resource" id="Resource_kxprf"]
+script = ExtResource("4_3m7hu")
+grid = ExtResource("3_sym5y")
+move_range = 2
+action_name = "move"
+action_time = 1
+
+[sub_resource type="Resource" id="Resource_kokyb"]
+script = ExtResource("5_82btw")
+damage = 5
+range = 2
+move_range = 1
+action_name = "charge"
+action_time = 2
+
+[sub_resource type="Resource" id="Resource_piw42"]
+script = ExtResource("6_j7dlx")
+damage = 10
+range = 2
+action_name = "Attack"
+action_time = 2
+metadata/_custom_type_script = "uid://djid8svotxnqa"
+
+[sub_resource type="Resource" id="Resource_dl1sm"]
+resource_local_to_scene = true
+script = ExtResource("8_tpumh")
+skin = ExtResource("9_ucmkc")
+actions = Array[ExtResource("2_ypu52")]([SubResource("Resource_kxprf"), SubResource("Resource_kokyb"), SubResource("Resource_piw42")])
+character_name = "red"
+max_health = 15
+health = 15
+faction = 1
+ai = ExtResource("7_e17s5")
+is_in_party = false
+cell = Vector2(3, 3)
 
 [resource]
 script = ExtResource("2_4oua7")
-entities = Array[ExtResource("1_81bsx")]([])
+entities = Array[ExtResource("1_81bsx")]([SubResource("Resource_dl1sm")])
 room_size = Vector2i(5, 8)
 ground_atlas = Array[Vector2i]([Vector2i(9, 8), Vector2i(16, 10)])
