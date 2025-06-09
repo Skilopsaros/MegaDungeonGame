@@ -42,18 +42,7 @@ func next_room() -> void:
 	start_battle()
 
 func go_to_room(room_data: RoomData) -> void:
-	print()
-	print("IN GO TO ROOM BEFORE")
-	for entity in room_data.entities:
-		print(entity)
-		print(entity.cell)
-	print()
 	await clear_room()
-	print("IN GO TO ROOM After")
-	for entity in room_data.entities:
-		print(entity)
-		print(entity.cell)
-	print()
 	game_board = room_scene.instantiate()
 	game_board.character_died.connect(_on_character_died)
 	game_board.data = room_data
@@ -93,19 +82,22 @@ func perform_actions() -> void:
 		if current_time == character.next_turn:
 			current_character = character
 			await current_character.execute_action()
-			print(character.character_name + "'s turn")
-			if character.is_in_party:
-				current_character.make_selected(true)
-				for action in character.actions:
-					_hud.add_action(action)
-				_hud.change_active_character(current_character)
-				return
-			else:
-				await get_tree().create_timer(0.3).timeout
-				await current_character.queue_ai_action()
-	advance_time()
-	await get_tree().create_timer(0.3).timeout
-	await perform_actions()
+			if battle_active:
+				print(character.character_name + "'s turn")
+				if character.is_in_party:
+					current_character.make_selected(true)
+					for action in character.actions:
+						_hud.add_action(action)
+					_hud.change_active_character(current_character)
+					return
+				else:
+					await get_tree().create_timer(0.3).timeout
+					if battle_active:
+						await current_character.queue_ai_action()
+	if battle_active:
+		advance_time()
+		await get_tree().create_timer(0.3).timeout
+		await perform_actions()
 
 func advance_time() -> void:
 	current_time += 1
@@ -122,16 +114,30 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("spacebar"):
 		next_room()
 	elif event.is_action_pressed("q"):
-		print(battle_active)
 		if battle_active:
-			print("before stop battle")
 			stop_battle()
 		else:
 			start_battle()
 
 func _on_character_died(character : Character) -> void:
 	_hud.clear_character_action_timeline(character)
-
+	await character.tree_exited
+	check_remaining_factions()
+	
+	
+func check_remaining_factions() -> void:
+	var remaining_factions = []
+	for char in get_tree().get_nodes_in_group("character"):
+		if char.faction not in remaining_factions:
+			remaining_factions.append(char.faction)
+	if len(remaining_factions) == 1:
+		stop_battle()
+	if Enums.factions.PC not in remaining_factions:
+		stop_battle()
+		game_over()
+	
+func game_over():
+	print("Game Over")
 
 func _on_cursor_accept_pressed(cell: Vector2) -> void:
 	if not battle_active:

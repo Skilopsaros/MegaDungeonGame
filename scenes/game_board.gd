@@ -19,14 +19,10 @@ func is_occupied(cell: Vector2) -> bool:
 func _ready() -> void:
 	grid.offset = position
 	grid.size = room_size
-	print("IN READY")
 	for entity in entities:
-		print(entity)
-		print(entity.cell)
 		var en_scene = entity.scene.instantiate()
 		en_scene.data = entity
 		add_child(en_scene)
-	print()
 	reinitialize()
  
 func reinitialize() -> void:
@@ -50,14 +46,10 @@ func get_pcs() -> Array[CharacterData]:
 	return pcs
 
 func remove_pcs() -> void:
-	print("IN REMOVE PCS")
-	print(get_tree().get_nodes_in_group("character"))
 	for entity in get_tree().get_nodes_in_group("character"):
 		if entity.faction == Enums.factions.PC:
-			print("found one!")
 			entity.queue_free()
 			await entity.tree_exited
-	print(get_tree().get_nodes_in_group("character"))
 
 func export_data() -> RoomData:
 	var new_entities : Array[Entity] = []
