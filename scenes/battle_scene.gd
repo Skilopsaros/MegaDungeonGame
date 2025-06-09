@@ -79,21 +79,23 @@ func perform_actions() -> void:
 	game_board.reinitialize()
 	_hud.clear_buttons()
 	for character in get_tree().get_nodes_in_group("character"):
-		if current_time == character.next_turn:
-			current_character = character
-			await current_character.execute_action()
-			if battle_active:
-				print(character.character_name + "'s turn")
-				if character.is_in_party:
-					current_character.make_selected(true)
-					for action in character.actions:
-						_hud.add_action(action)
-					_hud.change_active_character(current_character)
-					return
-				else:
-					await get_tree().create_timer(0.3).timeout
-					if battle_active:
-						await current_character.queue_ai_action()
+		if battle_active:
+			if current_time == character.next_turn:
+				current_character = character
+				await current_character.execute_action()
+				await game_board.reinitialize()
+				if battle_active:
+					print(character.character_name + "'s turn")
+					if character.is_in_party:
+						current_character.make_selected(true)
+						for action in character.actions:
+							_hud.add_action(action)
+						_hud.change_active_character(current_character)
+						return
+					else:
+						await get_tree().create_timer(0.3).timeout
+						if battle_active:
+							await current_character.queue_ai_action()
 	if battle_active:
 		advance_time()
 		await get_tree().create_timer(0.3).timeout

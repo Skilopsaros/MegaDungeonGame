@@ -59,18 +59,18 @@ action_time = 1
 
 [sub_resource type="Resource" id="Resource_kokyb"]
 script = ExtResource("9_cclt2")
-damage = 15
-range = 2
-move_range = 3
+damage = 5
+range = 1
+move_range = 1
 action_name = "charge"
-action_time = 1
+action_time = 3
 
 [sub_resource type="Resource" id="Resource_piw42"]
 script = ExtResource("5_fc8da")
 damage = 10
 range = 1
 action_name = "Attack"
-action_time = 2
+action_time = 3
 metadata/_custom_type_script = "uid://djid8svotxnqa"
 
 [sub_resource type="Resource" id="Resource_g14kj"]

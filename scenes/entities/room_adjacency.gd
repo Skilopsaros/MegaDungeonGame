@@ -1,11 +1,12 @@
 extends Node
 class_name RoomAdjacency
-
+@export var grid: Resource = preload("res://resources/square_grid.tres")
 @export var data: RoomAdjacencyData
 
 @onready var target_room := data.target_room
 @onready var target_cell := data.target_cell
 @onready var cell := data.cell
+@onready var rect = $Rectangle
 
 signal switch_room
 
